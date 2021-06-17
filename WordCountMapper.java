@@ -7,24 +7,31 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class WordCountMapper extends Mapper<LongWritable,  Text, Text, IntWritable>
 
+public class MyMapper extends Mapper<LongWritable, Text, Text, IntWritable> 
 {
 
-	@Override
-	protected void map(LongWritable key, Text value, org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException 
+	public void map(LongWritable key, Text value, Context context)throws java.io.IOException, InterruptedException
 	{
-		String inputstring = value.toString();
+		String data[]=value.toString().split(" ");    //data =  [85 131 993 392 689....]
 		
-		for(String x : inputstring.split(" "))
-		{
-			if (x.equals("India"))
-			{
-
-				context.write(new Text(x),new IntWritable(1));	
-			}
 	
-		}	
+		for(String num:data)
+		{
+			int number=Integer.parseInt(num);
+			int c=0;
+			for (int i=2; i<number/2 ;++i)
+			{
+				if(number%i==0)
+				{
+					c=1;
+				}
+			}
+			if(c==0)
+			{
+				context.write(new Text("PRIME"), new IntWritable(number));
+			}
+					
+		}
 	}
-
 }
